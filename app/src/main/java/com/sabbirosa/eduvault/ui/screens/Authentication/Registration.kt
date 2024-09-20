@@ -44,8 +44,6 @@ fun RegistrationScreen(registervm: AuthenticationVM, navController: NavHostContr
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
 
-
-
     val textFieldModifier = Modifier
         .fillMaxWidth()
         .padding(vertical = 5.dp, horizontal = 20.dp)
@@ -75,7 +73,7 @@ fun RegistrationScreen(registervm: AuthenticationVM, navController: NavHostContr
             .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.Center,
     ) {
-        item{
+        item {
 
             OutlinedTextField(
                 value = name,
@@ -96,8 +94,7 @@ fun RegistrationScreen(registervm: AuthenticationVM, navController: NavHostContr
                 label = { Text("Student ID") },
                 modifier = textFieldModifier,
                 keyboardOptions = KeyboardOptions.Default.copy(
-                    imeAction = ImeAction.Next,
-                    keyboardType = KeyboardType.Number
+                    imeAction = ImeAction.Next, keyboardType = KeyboardType.Number
                 ),
                 shape = MaterialTheme.shapes.medium,
             )
@@ -123,25 +120,22 @@ fun RegistrationScreen(registervm: AuthenticationVM, navController: NavHostContr
                 label = { Text("Email") },
                 modifier = textFieldModifier,
                 keyboardOptions = KeyboardOptions.Default.copy(
-                    imeAction = ImeAction.Next,
-                    keyboardType = KeyboardType.Email
+                    imeAction = ImeAction.Next, keyboardType = KeyboardType.Email
                 ),
                 shape = MaterialTheme.shapes.medium,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            OutlinedTextField(
-                value = password,
-                onValueChange = { password=  it },
+            OutlinedTextField(value = password,
+                onValueChange = { password = it },
                 label = { Text("Password") },
                 modifier = textFieldModifier,
                 shape = MaterialTheme.shapes.medium,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
-                    val image = if (passwordVisible)
-                        Icons.Filled.VisibilityOff
+                    val image = if (passwordVisible) Icons.Filled.VisibilityOff
                     else Icons.Filled.Visibility
 
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
@@ -149,8 +143,8 @@ fun RegistrationScreen(registervm: AuthenticationVM, navController: NavHostContr
                     }
                 }
             )
-            OutlinedTextField(
-                value = confirmPassword,
+
+            OutlinedTextField(value = confirmPassword,
                 onValueChange = { confirmPassword = it },
                 label = { Text("Confirm Password") },
                 modifier = textFieldModifier,
@@ -158,8 +152,7 @@ fun RegistrationScreen(registervm: AuthenticationVM, navController: NavHostContr
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
-                    val image = if (confirmPasswordVisible)
-                        Icons.Filled.VisibilityOff
+                    val image = if (confirmPasswordVisible) Icons.Filled.VisibilityOff
                     else Icons.Filled.Visibility
 
                     IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
@@ -196,10 +189,9 @@ fun RegistrationScreen(registervm: AuthenticationVM, navController: NavHostContr
                 Text(
                     text = "Register",
                     color = Color.White,
-                    modifier = Modifier
-                        .padding(vertical = 8.dp),
+                    modifier = Modifier.padding(vertical = 8.dp),
 
-                    )
+                )
             }
         }
     }

@@ -53,61 +53,62 @@ fun SavedResourceScreen(userid: String, resourcevm: ResourceVM) {
     val scope = rememberCoroutineScope()
 
     var isLoading by remember { mutableStateOf(true) }
-    var savedResources by remember{
+
+    var savedResources by remember {
         mutableStateOf(listOf<Resource>())
     }
+
     var trigger by remember {
         mutableStateOf(true)
     }
-    var filteredResourceList by remember{
+
+    var filteredResourceList by remember {
         mutableStateOf(savedResources)
     }
+
     var searchQuery by remember { mutableStateOf(TextFieldValue("")) }
+
     val filters = listOf(
-        "Title",
-        "Description",
-        "Course Code"
+        "Title", "Description", "Course Code"
     )
-    var currentFilter by remember{
+
+    var currentFilter by remember {
         mutableStateOf(filters[0])
     }
 
-    LaunchedEffect(savedResources, trigger,currentFilter, searchQuery) {
+    LaunchedEffect(savedResources, trigger, currentFilter, searchQuery) {
         scope.launch {
-            resourcevm.getUserSavedResources(
-                userId = userid.toInt(),
-                setList = { list ->
-                    savedResources = list
-                }
-            )
-            when(currentFilter){
-                filters[0] ->{
+            resourcevm.getUserSavedResources(userId = userid.toInt(), setList = { list ->
+                savedResources = list
+            })
+            when (currentFilter) {
+                filters[0] -> {
                     filteredResourceList = filterByTitle(
-                        resources = savedResources,
-                        title = searchQuery.text
+                        resources = savedResources, title = searchQuery.text
                     )
                 }
-                filters[1] ->{
+
+                filters[1] -> {
                     filteredResourceList = filterByDescription(
-                        resources = savedResources,
-                        description = searchQuery.text
+                        resources = savedResources, description = searchQuery.text
                     )
                 }
-                filters[2] ->{
+
+                filters[2] -> {
                     filteredResourceList = filterByCourseCode(
-                        resources = savedResources,
-                        courseCode = searchQuery.text
+                        resources = savedResources, courseCode = searchQuery.text
                     )
                 }
+
                 else -> false
             }
             delay(200)
             isLoading = false
         }
     }
+
     Column(
-        modifier = Modifier
-            .padding(bottom = 40.dp)
+        modifier = Modifier.padding(bottom = 40.dp)
     ) {
         Text(
             text = "EduVault",
@@ -117,10 +118,10 @@ fun SavedResourceScreen(userid: String, resourcevm: ResourceVM) {
                 .fillMaxWidth(),
             textAlign = TextAlign.Center
         )
+
         Row(
-            modifier = Modifier
-                .padding(top = 20.dp)
-        ){
+            modifier = Modifier.padding(top = 20.dp)
+        ) {
             SearchBar(
                 action = { query ->
                     searchQuery = query
@@ -133,6 +134,7 @@ fun SavedResourceScreen(userid: String, resourcevm: ResourceVM) {
                 weight = 0.45f
 
             )
+
             DropDownCard(
                 dropdownItems = filters,
                 startPadding = 10.dp,
@@ -146,36 +148,29 @@ fun SavedResourceScreen(userid: String, resourcevm: ResourceVM) {
         }
 
     }
-    if(isLoading){
+    if (isLoading) {
         CircularLoadingBasic("Loading Saved Resources...")
-    }
-    else{
+    } else {
         LazyColumn(
-            modifier = Modifier
-                .padding(top = 170.dp, bottom = 20.dp)
+            modifier = Modifier.padding(top = 170.dp, bottom = 20.dp)
         ) {
             items(
                 if (searchQuery.text == "") savedResources
                 else filteredResourceList
             ) { resource ->
-               SavedResource(
-                   resource = resource,
-                   onUnSave = {
-                       scope.launch {
-                           resourcevm.unsaveResource(
-                               userId = userid.toInt(),
-                               resourceId = resource.id!!.toInt(),
-                               onSubmit = { status ->
-                                   // Show the toast directly in the callback on the main thread
-                                   (context as? Activity)?.runOnUiThread {
-                                       Toast.makeText(context, status, Toast.LENGTH_SHORT).show()
-                                   }
-                                   trigger = !trigger
-                               }
-                           )
-                       }
-                   }
-               )
+                SavedResource(resource = resource, onUnSave = {
+                    scope.launch {
+                        resourcevm.unsaveResource(userId = userid.toInt(),
+                            resourceId = resource.id!!.toInt(),
+                            onSubmit = { status ->
+                                // Show the toast directly in the callback on the main thread
+                                (context as? Activity)?.runOnUiThread {
+                                    Toast.makeText(context, status, Toast.LENGTH_SHORT).show()
+                                }
+                                trigger = !trigger
+                            })
+                    }
+                })
             }
         }
     }
@@ -183,13 +178,11 @@ fun SavedResourceScreen(userid: String, resourcevm: ResourceVM) {
 
 @Composable
 fun SavedResource(
-    resource: Resource,
-    onUnSave: (Int) -> Unit
-){
+    resource: Resource, onUnSave: (Int) -> Unit
+) {
     Row(
-        modifier =Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ){
+        modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+    ) {
         ResourceButton(resource)
 
         IconButton(
@@ -198,11 +191,8 @@ fun SavedResource(
         ) {
             Icon(
                 imageVector = Icons.Filled.BookmarkRemove, // Replace with your save icon resource
-                contentDescription = "Save",
-                tint = Color(0xFF5A5A5A) // Change color as needed
+                contentDescription = "Save", tint = Color(0xFF5A5A5A) // Change color as needed
             )
         }
-
     }
-
 }

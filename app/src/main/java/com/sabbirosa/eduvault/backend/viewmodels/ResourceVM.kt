@@ -31,8 +31,7 @@ open class ResourceVM @Inject constructor(
     }
 
     fun createResource(
-        resource: Resource,
-        onSubmit: (String) -> Unit
+        resource: Resource, onSubmit: (String) -> Unit
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -57,10 +56,16 @@ open class ResourceVM @Inject constructor(
                 val response = api.createResource(requestBody).awaitResponse()
 
                 if (response.isSuccessful) {
-                    Log.d("CreateResource", "Resource created successfully: ${response.body()?.message}")
+                    Log.d(
+                        "CreateResource",
+                        "Resource created successfully: ${response.body()?.message}"
+                    )
                     onSubmit("Submit Successful")
                 } else {
-                    Log.e("CreateResource", "Failed to create resource: ${response.errorBody()?.string()}")
+                    Log.e(
+                        "CreateResource",
+                        "Failed to create resource: ${response.errorBody()?.string()}"
+                    )
                     onSubmit("Submit Failed")
                 }
             } catch (e: Exception) {
@@ -83,7 +88,10 @@ open class ResourceVM @Inject constructor(
                     response.body()?.let { resourceList ->
                         _resources.postValue(resourceList)
                         _resourceCount.postValue(resourceList.size) // Post the size of the list
-                        Log.d("ResourceVM-Success", "Number of resources: ${resourceList.size} ${resourceList[0].title}")
+                        Log.d(
+                            "ResourceVM-Success",
+                            "Number of resources: ${resourceList.size} ${resourceList[0].title}"
+                        )
                         setList(resourceList)
                     }
 
@@ -92,7 +100,10 @@ open class ResourceVM @Inject constructor(
                     if (response.code() == 404) {
                         Log.d("ResourceVM404", "No saved resources found")
                     } else {
-                        Log.e("ResourceVM", "Error fetching resources: ${response.errorBody()?.string()}")
+                        Log.e(
+                            "ResourceVM",
+                            "Error fetching resources: ${response.errorBody()?.string()}"
+                        )
                     }
                 }
             } catch (e: Exception) {
@@ -100,6 +111,7 @@ open class ResourceVM @Inject constructor(
             }
         }
     }
+
     fun getResourceById(resourceId: Int, setResource: (Resource?) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -119,7 +131,10 @@ open class ResourceVM @Inject constructor(
                     if (response.code() == 404) {
                         Log.d("ResourceVM404", "No resource found")
                     } else {
-                        Log.e("ResourceVM", "Error fetching resource: ${response.errorBody()?.string()}")
+                        Log.e(
+                            "ResourceVM",
+                            "Error fetching resource: ${response.errorBody()?.string()}"
+                        )
                     }
                     setResource(null) // Pass null to indicate failure
                 }
@@ -132,9 +147,7 @@ open class ResourceVM @Inject constructor(
     }
 
     fun updateResource(
-        id: Int,
-        resource: Resource,
-        onUpdate: (String) -> Unit
+        id: Int, resource: Resource, onUpdate: (String) -> Unit
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -156,10 +169,16 @@ open class ResourceVM @Inject constructor(
                 val response = api.updateResource(id, requestBody).awaitResponse()
 
                 if (response.isSuccessful) {
-                    Log.d("UpdateResource", "Resource updated successfully: ${response.body()?.message}")
+                    Log.d(
+                        "UpdateResource",
+                        "Resource updated successfully: ${response.body()?.message}"
+                    )
                     onUpdate("Update Successful")
                 } else {
-                    Log.e("UpdateResource", "Failed to update resource: ${response.errorBody()?.string()}")
+                    Log.e(
+                        "UpdateResource",
+                        "Failed to update resource: ${response.errorBody()?.string()}"
+                    )
                     onUpdate("Update Failed")
                 }
             } catch (e: Exception) {
@@ -177,7 +196,9 @@ open class ResourceVM @Inject constructor(
                     Log.d("ResourceVM-Success", "Resource deleted successfully")
                     onSubmit("Deleted") // Pass success message
                 } else {
-                    Log.e("ResourceVM", "Error deleting resource: ${response.errorBody()?.string()}")
+                    Log.e(
+                        "ResourceVM", "Error deleting resource: ${response.errorBody()?.string()}"
+                    )
                     onSubmit("Failed to delete") // Pass failure message
                 }
             } catch (e: Exception) {
@@ -200,7 +221,9 @@ open class ResourceVM @Inject constructor(
                         setList(emptyList()) // Handle case where body is null
                     }
                 } else {
-                    Log.e("ResourceVM", "Error fetching resources: ${response.errorBody()?.string()}")
+                    Log.e(
+                        "ResourceVM", "Error fetching resources: ${response.errorBody()?.string()}"
+                    )
                     setList(emptyList()) // Return empty list on error
                 }
             } catch (e: Exception) {
@@ -216,8 +239,7 @@ open class ResourceVM @Inject constructor(
             val requestBody = JSONObject().apply {
                 put("user_id", userId)
                 put("resource_id", resourceId)
-            }.toString()
-                .toRequestBody("application/json".toMediaTypeOrNull())
+            }.toString().toRequestBody("application/json".toMediaTypeOrNull())
 
             try {
                 val response = api.saveResource(requestBody).awaitResponse()
@@ -228,7 +250,8 @@ open class ResourceVM @Inject constructor(
                 } else {
                     // Handle error response
                     val errorBody = response.errorBody()?.string()
-                    val errorMessage = extractMessageFromError(errorBody) ?: "Failed to save resource."
+                    val errorMessage =
+                        extractMessageFromError(errorBody) ?: "Failed to save resource."
                     Log.e("ResourceVM", "Error saving resource: $errorMessage")
                     onSubmit(errorMessage) // Pass the specific error message
                 }
@@ -255,13 +278,18 @@ open class ResourceVM @Inject constructor(
                 val response = api.getUserSavedResources(userId).awaitResponse()
                 if (response.isSuccessful) {
                     response.body()?.let { resourceList ->
-                        Log.d("ResourceVM-Success", "Number of saved resources: ${resourceList.size}")
+                        Log.d(
+                            "ResourceVM-Success", "Number of saved resources: ${resourceList.size}"
+                        )
                         setList(resourceList) // Pass the resource list to the callback
                     } ?: run {
                         Log.e("ResourceVM", "Error: Response body is null.")
                     }
                 } else {
-                    Log.e("ResourceVM", "Error fetching saved resources: ${response.errorBody()?.string()}")
+                    Log.e(
+                        "ResourceVM",
+                        "Error fetching saved resources: ${response.errorBody()?.string()}"
+                    )
                 }
             } catch (e: Exception) {
                 Log.e("ResourceVM-Exception", "Exception: ${e.message}")
@@ -275,8 +303,7 @@ open class ResourceVM @Inject constructor(
             val requestBody = JSONObject().apply {
                 put("user_id", userId)
                 put("resource_id", resourceId)
-            }.toString()
-                .toRequestBody("application/json".toMediaTypeOrNull())
+            }.toString().toRequestBody("application/json".toMediaTypeOrNull())
 
             try {
                 val response = api.unsaveResource(requestBody).awaitResponse()
@@ -284,7 +311,9 @@ open class ResourceVM @Inject constructor(
                     Log.d("ResourceVM-Success", "Resource unsaved successfully.")
                     onSubmit("Resource unsaved successfully.")
                 } else {
-                    Log.e("ResourceVM", "Error unsaving resource: ${response.errorBody()?.string()}")
+                    Log.e(
+                        "ResourceVM", "Error unsaving resource: ${response.errorBody()?.string()}"
+                    )
                     onSubmit("Failed to unsave resource.")
                 }
             } catch (e: Exception) {
@@ -293,11 +322,5 @@ open class ResourceVM @Inject constructor(
             }
         }
     }
-
-
-
-
-
-
 }
 

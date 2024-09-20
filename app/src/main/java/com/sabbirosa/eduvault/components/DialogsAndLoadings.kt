@@ -11,19 +11,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 
 @Composable
-fun CircularLoadingBasic(text: String = ""){
+fun CircularLoadingBasic(text: String = "") {
     Box(
-        modifier = Modifier
-            .fillMaxSize(),
-        contentAlignment = Alignment.Center
+        modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
 
-    ){
+    ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
-        ){
+        ) {
             Text(
-                text = text,
-                color = Color.Black
+                text = text, color = Color.Black
             )
             CircularProgressIndicator()
         }

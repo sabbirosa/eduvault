@@ -51,18 +51,18 @@ fun SubmitResourceForm(
     val (publicUrl, setPublicUrl) = rememberSaveable { mutableStateOf("") }
     val (courseCode, setCourseCode) = rememberSaveable { mutableStateOf("") }
     val (category, setCategory) = rememberSaveable { mutableStateOf("Notes") }
-    var isLoading by remember{ mutableStateOf(true) }
+    var isLoading by remember { mutableStateOf(true) }
 
-    val pageTitle = if(resourceId == "") "Submit Resource"
-                    else "Edit Resource"
-    val subText = if(resourceId == "") "Add a resource here with proper details"
-                    else "Update your resources with proper details"
+    val pageTitle = if (resourceId == "") "Submit Resource"
+    else "Edit Resource"
+    val subText = if (resourceId == "") "Add a resource here with proper details"
+    else "Update your resources with proper details"
 
     LaunchedEffect(resourceId) {
         scope.launch {
-            if(resourceId != ""){
-                resourcevm.getResourceById(resourceId.toInt()){ value ->
-                    if(value != null){
+            if (resourceId != "") {
+                resourcevm.getResourceById(resourceId.toInt()) { value ->
+                    if (value != null) {
                         setTitle(value.title!!)
                         setDescription(value.description!!)
                         setCategory(value.category!!)
@@ -72,18 +72,15 @@ fun SubmitResourceForm(
                 }
                 delay(200)
                 isLoading = false
-            }
-            else{
+            } else {
                 isLoading = false
             }
         }
     }
 
-
-    if(isLoading){
+    if (isLoading) {
         CircularLoadingBasic("Getting Resource...")
-    }
-    else{
+    } else {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -101,14 +98,10 @@ fun SubmitResourceForm(
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
-            // Title Text Field
             CustomTextField(
-                label = "Title",
-                value = title,
-                onValueChange = setTitle
+                label = "Title", value = title, onValueChange = setTitle
             )
 
-            // Description Text Field
             CustomTextField(
                 label = "Description",
                 value = description,
@@ -116,15 +109,12 @@ fun SubmitResourceForm(
 
                 )
 
-            // Category Dropdown
             CategoryDropdown(
                 current = if (resourceId != "") category else "Notes",
                 onChange = { value ->
                     setCategory(value)
-                }
-            )
+                })
 
-            // Course Code Text Field
             CustomTextField(
                 label = "Course Code",
                 value = courseCode,
@@ -132,7 +122,6 @@ fun SubmitResourceForm(
 
                 )
 
-            // Public URL Text Field
             CustomTextField(
                 label = "Public URL eg. Drive Link",
                 value = publicUrl,
@@ -140,7 +129,6 @@ fun SubmitResourceForm(
 
                 )
 
-            // Add Resource Button
             OutlinedButton(
                 onClick = {
                     scope.launch {
@@ -154,27 +142,22 @@ fun SubmitResourceForm(
                             id = 0
                         )
 
-                        if(resourceId != ""){
+                        if (resourceId != "") {
 
                             resourcevm.updateResource(
                                 id = resourceId.toInt(),
                                 resource = resource,
                                 onUpdate = { status ->
                                     submitStatus = status
-                                }
-                            )
-                        }
-                        else{
-                            resourcevm.createResource(
-                                resource = resource,
-                                onSubmit = { status ->
-                                    submitStatus = status
-                                }
-                            )
+                                })
+                        } else {
+                            resourcevm.createResource(resource = resource, onSubmit = { status ->
+                                submitStatus = status
+                            })
                         }
 
 
-                        withContext(Dispatchers.Main){
+                        withContext(Dispatchers.Main) {
                             Toast.makeText(context, submitStatus, Toast.LENGTH_SHORT).show()
                         }
                         navController.navigate("My Vault")
@@ -185,12 +168,7 @@ fun SubmitResourceForm(
                     .padding(vertical = 8.dp),
                 shape = RoundedCornerShape(8.dp),
                 border = BorderStroke(1.dp, Color.Gray),
-                enabled = (
-                        title != "" &&
-                                description != "" &&
-                                courseCode != "" &&
-                                publicUrl != ""
-                        )
+                enabled = (title != "" && description != "" && courseCode != "" && publicUrl != "")
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
@@ -208,10 +186,7 @@ fun SubmitResourceForm(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomTextField(
-    label: String,
-    value: String?,
-    onValueChange: (String) -> Unit,
-    readOnly: Boolean = false
+    label: String, value: String?, onValueChange: (String) -> Unit, readOnly: Boolean = false
 ) {
     OutlinedTextField(
         value = value ?: "",
@@ -234,26 +209,26 @@ fun CustomTextField(
 
 @Composable
 fun CategoryDropdown(
-    current: String = "Notes",
-    onChange:(String) -> Unit
+    current: String = "Notes", onChange: (String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     var category by remember {
-        mutableStateOf(listOf(
-            "Notes",
-            "Quiz Questions",
-            "Lectures",
-            "Outlines"
-        ))
+        mutableStateOf(
+            listOf(
+                "Notes", "Quiz Questions", "Lectures", "Outlines"
+            )
+        )
     }
     println("Current is $current")
     var selectedCategory by remember {
         mutableStateOf(category[category.indexOf(current)])
     }
 
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .padding(vertical = 8.dp)) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+    ) {
         OutlinedButton(
             onClick = { expanded = true },
             modifier = Modifier.fillMaxWidth(),
@@ -261,35 +236,25 @@ fun CategoryDropdown(
             border = BorderStroke(1.dp, Color.Gray)
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
+                verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = selectedCategory,
-                    modifier = Modifier.weight(1f),
-                    color = Color.Black
+                    text = selectedCategory, modifier = Modifier.weight(1f), color = Color.Black
                 )
                 Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = null)
             }
         }
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
+        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
 
             category.forEachIndexed { _, category ->
-                DropdownMenuItem(
-                    onClick = {
-                        selectedCategory = category
-                        onChange(category)
-                        expanded = false
-                    },
-                    text = {
-                        Text(text = category)
-                    }
-                )
+                DropdownMenuItem(onClick = {
+                    selectedCategory = category
+                    onChange(category)
+                    expanded = false
+                }, text = {
+                    Text(text = category)
+                })
             }
-
         }
     }
 }

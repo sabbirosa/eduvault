@@ -34,56 +34,49 @@ import kotlinx.coroutines.launch
 
 @Composable
 
-fun Profile(session: Session?){
+fun Profile(session: Session?) {
     val resourcevm: ResourceVM = hiltViewModel()
 
     var isLoading by rememberSaveable {
         mutableStateOf(true)
     }
+
     val scope = rememberCoroutineScope()
-    var uploadedResources by remember{
-        mutableIntStateOf(0)
-    }
-    var savedResources by remember{
+
+    var uploadedResources by remember {
         mutableIntStateOf(0)
     }
 
+    var savedResources by remember {
+        mutableIntStateOf(0)
+    }
 
     LaunchedEffect(session) {
         scope.launch {
             isLoading = true
             delay(1000)
-            if(session != null){
+            if (session != null) {
                 resourcevm.getUserSavedResources(
                     userId = session.userId.toInt(),
                     setList = { list ->
                         savedResources = list.size
-                    }
-                )
-                resourcevm.getCreatedResources(
-                    userId = session.userId.toInt(),
-                    setList = { list ->
-                        uploadedResources = list.size
-                    }
-                )
+                    })
+                resourcevm.getCreatedResources(userId = session.userId.toInt(), setList = { list ->
+                    uploadedResources = list.size
+                })
             }
             isLoading = false
         }
     }
 
-
-
-
-    if(session == null){
+    if (session == null) {
         Text("No Login Data")
-    }
-    else{
+    } else {
         Box(
             modifier = Modifier
                 .padding(top = 100.dp)
                 .fillMaxSize()
-        )
-        {
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -101,7 +94,7 @@ fun Profile(session: Session?){
                             .fillMaxWidth()
                             .padding(16.dp)
                     ) {
-                        item{
+                        item {
                             Text(
                                 text = "User Information",
                                 style = MaterialTheme.typography.titleLarge.copy(
@@ -110,35 +103,29 @@ fun Profile(session: Session?){
                                 modifier = Modifier.padding(bottom = 8.dp)
                             )
 
-//                        Text(text = "Name: ${session.fullName}", style = MaterialTheme.typography.bodyLarge)
-//                        Text(text = "Email: ${session.email}", style = MaterialTheme.typography.bodyLarge)
-//                        Text(text = "Department: ${session.department}", style = MaterialTheme.typography.bodyLarge)
-//                        Text(text = "Student ID: ${session.studentId}", style = MaterialTheme.typography.bodyLarge)
-//                        Text(text = "User ID: ${session.userId}", style = MaterialTheme.typography.bodyLarge)
                             CardWithTitle(title = "Name", info = session.fullName)
                             CardWithTitle(title = "Email", info = session.email)
                             CardWithTitle(title = "Department", info = session.department)
                             CardWithTitle(title = "Student ID", info = session.studentId)
                             CardWithTitle(title = "User ID", info = session.userId)
-                            CardWithTitle(title = "Uploaded Resources", info = uploadedResources.toString())
-                            CardWithTitle(title = "Saved Resources", info = savedResources.toString())
+                            CardWithTitle(
+                                title = "Uploaded Resources", info = uploadedResources.toString()
+                            )
+                            CardWithTitle(
+                                title = "Saved Resources", info = savedResources.toString()
+                            )
                         }
                     }
                 }
-
-
             }
-
         }
     }
-
 }
 
 @Composable
 fun CardWithTitle(
-    title: String,
-    info: String
-){
+    title: String, info: String
+) {
     Text(
         text = title,
         style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),

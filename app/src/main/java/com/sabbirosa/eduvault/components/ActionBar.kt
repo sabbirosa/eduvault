@@ -22,23 +22,19 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun TopActionBar(drawerState: DrawerState, scope: CoroutineScope, isLogin: Boolean){
+fun TopActionBar(drawerState: DrawerState, scope: CoroutineScope, isLogin: Boolean) {
     Box(
-        modifier = Modifier
-            .padding(top = 20.dp),
-    ){
+        modifier = Modifier.padding(top = 20.dp),
+    ) {
         Card(
-            modifier = Modifier
-                .requiredHeight(50.dp),
+            modifier = Modifier.requiredHeight(50.dp),
             colors = CardDefaults.cardColors(Color.Transparent)
         ) {
             Row(
-                modifier = Modifier
-                    .padding(8.dp)
-//                    .fillMaxSize()
+                modifier = Modifier.padding(8.dp)
 
             ) {
-                if(isLogin){
+                if (isLogin) {
                     IconButton(onClick = {
                         scope.launch {
                             drawerState.apply {
@@ -49,14 +45,10 @@ fun TopActionBar(drawerState: DrawerState, scope: CoroutineScope, isLogin: Boole
                                 }
                             }
                         }
-                    }
-                    ) {
+                    }) {
                         Icon(Icons.Default.Menu, "Menu")
                     }
                 }
-
-
-
             }
         }
     }

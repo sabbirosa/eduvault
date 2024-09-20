@@ -7,9 +7,9 @@ import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 
 @HiltAndroidApp
-class LocalServer: Application() {
+class LocalServer : Application() {
     // register models and store it in a variable for accessing all over the application
-    companion object{
+    companion object {
         lateinit var realm: Realm
     }
 
@@ -18,11 +18,11 @@ class LocalServer: Application() {
 
         realm = Realm.open(
             configuration = RealmConfiguration.create(
-                schema = setOf(     // register models here
+                schema = setOf(
+                    // register models here
                     Session::class,
                 )
             )
         )
     }
-
 }

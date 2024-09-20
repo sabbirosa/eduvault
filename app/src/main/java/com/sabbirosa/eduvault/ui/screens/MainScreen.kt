@@ -39,8 +39,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun MainScreen(
     modifier: Modifier
-){
-
+) {
     val authvm: AuthenticationVM = hiltViewModel()
     val allSessions by authvm.allSessions.collectAsState()
     val firstSession by authvm.firstSession.collectAsState(initial = null)
@@ -53,6 +52,7 @@ fun MainScreen(
     var selectedIndexBotNav by rememberSaveable {
         mutableIntStateOf(0)
     }
+
     var selectedIndexDrawer by rememberSaveable {
         mutableIntStateOf(0)
     }
@@ -60,9 +60,11 @@ fun MainScreen(
     val navDrawerItemList by rememberSaveable {
         mutableStateOf(NavDrawerItem.navDrawerItems)
     }
+
     var loginStatus by rememberSaveable {
         mutableStateOf(false)
     }
+
     var isLoading by rememberSaveable {
         mutableStateOf(true)
     }
@@ -76,23 +78,23 @@ fun MainScreen(
             isLoading = false
         }
     }
+
     LaunchedEffect(navBackStackEntry?.destination) {
         when (navBackStackEntry?.destination?.route) {
-            "Profile" -> selectedIndexDrawer = navDrawerItemList.indexOfFirst { it.title == "Profile" }
-            "Resources" -> selectedIndexDrawer = navDrawerItemList.indexOfFirst { it.title == "Resources" }
-            // Add other routes here if needed
+            "Profile" -> selectedIndexDrawer =
+                navDrawerItemList.indexOfFirst { it.title == "Profile" }
+
+            "Resources" -> selectedIndexDrawer =
+                navDrawerItemList.indexOfFirst { it.title == "Resources" }
         }
     }
 
 
-    if (isLoading){
+    if (isLoading) {
         CircularLoadingBasic("Checking Session...")
-    }
-    else{
-
+    } else {
         ModalNavigationDrawer(
-            drawerState = drawerState,
-            drawerContent = {
+            drawerState = drawerState, drawerContent = {
                 ModalDrawerSheet {
                     NavDrawer(
                         scrollState = scrollState,
@@ -103,47 +105,42 @@ fun MainScreen(
                             scope.launch {
                                 drawerState.close()
                             }
-
-
                         },
                         isLogin = loginStatus
-
                     )
                 }
-            },
-            gesturesEnabled = true
+            }, gesturesEnabled = true
         ) {
-
-            Scaffold(
-                modifier = modifier,
-                topBar = { TopActionBar(drawerState = drawerState, scope = scope, isLogin = loginStatus) }
-            ) {
-                NavHost(
-                    navController = navController, startDestination =
-                    if (loginStatus) "Profile" else "Login/Registration"
+            Scaffold(modifier = modifier, topBar = {
+                TopActionBar(
+                    drawerState = drawerState, scope = scope, isLogin = loginStatus
                 )
-                {
+            }) {
+                NavHost(
+                    navController = navController,
+                    startDestination = if (loginStatus) "Profile" else "Login/Registration"
+                ) {
                     // Routes
                     composable("Profile") {
                         Profile(firstSession)
                     }
+
                     composable("Login/Registration") {
                         Authentication(authvm, navController)
                     }
+
                     composable("Logout") {
                         scope.launch {
                             authvm.logout()
                         }
                         Profile(firstSession)
                     }
+
                     composable("Resource") {
                         Resources(firstSession?.userId ?: "0")
                     }
-
                 }
             }
-
-
         }
     }
 }

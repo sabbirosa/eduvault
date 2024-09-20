@@ -75,16 +75,14 @@ fun LoginScreen(authvm: AuthenticationVM, navController: NavHostController) {
             label = { Text("E-mail") },
             modifier = textFieldModifier,
             keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = ImeAction.Next,
-                keyboardType = KeyboardType.Email
+                imeAction = ImeAction.Next, keyboardType = KeyboardType.Email
             ),
             shape = MaterialTheme.shapes.medium,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        OutlinedTextField(
-            value = password,
+        OutlinedTextField(value = password,
             onValueChange = { setPassword(it) },
             label = { Text("Password") },
             modifier = textFieldModifier,
@@ -92,8 +90,7 @@ fun LoginScreen(authvm: AuthenticationVM, navController: NavHostController) {
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
-                val image = if (passwordVisible)
-                    Icons.Filled.VisibilityOff
+                val image = if (passwordVisible) Icons.Filled.VisibilityOff
                 else Icons.Filled.Visibility
 
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
@@ -106,10 +103,9 @@ fun LoginScreen(authvm: AuthenticationVM, navController: NavHostController) {
 
         Button(
             onClick = {
-                scope.launch{
+                scope.launch {
                     authvm.loginUser(
-                        email = email,
-                        password = password
+                        email = email, password = password
                     )
                     Toast.makeText(context, "Login Succesful!!", Toast.LENGTH_SHORT).show()
                     navController.navigate("Profile")
@@ -124,10 +120,8 @@ fun LoginScreen(authvm: AuthenticationVM, navController: NavHostController) {
             Text(
                 text = "Login",
                 color = Color.White,
-                modifier = Modifier
-                    .padding(vertical = 8.dp),
-
-                )
+                modifier = Modifier.padding(vertical = 8.dp),
+            )
         }
     }
 }

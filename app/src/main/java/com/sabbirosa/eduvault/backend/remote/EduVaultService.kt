@@ -10,17 +10,12 @@ import retrofit2.http.*
 
 interface EduVaultService {
 
-    // Register a new user
     @POST("register")
     fun registerUser(@Body body: RequestBody): Call<ResponseBody>
 
-
-
-    // User login
     @POST("login")
     fun loginUser(@Body body: RequestBody): Call<ResponseBody>
 
-    // Create a new resource
     @POST("resources")
     fun createResource(@Body body: RequestBody): Call<ResponseString>
 
@@ -32,8 +27,7 @@ interface EduVaultService {
 
     @PUT("resources/{id}")
     fun updateResource(
-        @Path("id") id: Int,
-        @Body requestBody: RequestBody
+        @Path("id") id: Int, @Body requestBody: RequestBody
     ): Call<ResponseString>
 
     @DELETE("resources/{id}")

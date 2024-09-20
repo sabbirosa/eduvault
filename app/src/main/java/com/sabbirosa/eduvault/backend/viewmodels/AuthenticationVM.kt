@@ -27,36 +27,22 @@ import javax.inject.Inject
 
 @HiltViewModel
 open class AuthenticationVM @Inject constructor(
-    private val sessionR: SessionRepository,
-    private val api: EduVaultService
+    private val sessionR: SessionRepository, private val api: EduVaultService
 
 ) : ViewModel() {
 
-
-
-    val allSessions = sessionR.getAllSession()
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(),
-            emptyList()
-        )
+    val allSessions = sessionR.getAllSession().stateIn(
+        viewModelScope, SharingStarted.WhileSubscribed(), emptyList()
+    )
 
     val firstSession = allSessions.map { sessions ->
         sessions.firstOrNull()
     }.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(),
-        null
+        viewModelScope, SharingStarted.WhileSubscribed(), null
     )
 
-
-
     suspend fun registerUser(
-        fullName: String,
-        studentId: String,
-        department: String,
-        email: String,
-        password: String
+        fullName: String, studentId: String, department: String, email: String, password: String
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -100,8 +86,6 @@ open class AuthenticationVM @Inject constructor(
                             }
                         }
                     }
-
-
                     Log.d("Registration Successful", "Registration successful, created sesstion")
                 } else {
                     Log.e("Register", "Registration failed: ${response.errorBody()?.string()}")
@@ -122,7 +106,8 @@ open class AuthenticationVM @Inject constructor(
                     put("password", password)
                 }
 
-                val requestBody = jsonObject.toString().toRequestBody("application/json; charset=utf-8".toMediaType())
+                val requestBody = jsonObject.toString()
+                    .toRequestBody("application/json; charset=utf-8".toMediaType())
                 val response = api.loginUser(requestBody).awaitResponse()
 
                 if (response.isSuccessful) {
@@ -139,7 +124,10 @@ open class AuthenticationVM @Inject constructor(
                             Log.d("Login", "Login successful: $message")
                             userData?.let {
                                 val emailFromResponse = it["email"] as? String
-                                Log.d("User Data", "Full Name: ${it["full_name"]}, Email: $emailFromResponse ${it["user_id"].toString()}")
+                                Log.d(
+                                    "User Data",
+                                    "Full Name: ${it["full_name"]}, Email: $emailFromResponse ${it["user_id"].toString()}"
+                                )
                                 val data = UserData(
                                     studentId = it["student_id"].toString(),
                                     email = it["email"].toString(),
@@ -149,7 +137,6 @@ open class AuthenticationVM @Inject constructor(
                                 )
                                 sessionR.createSession(data)
                                 Log.d("Login Successful", "Login successful, created sesstion")
-
                             }
                         }
                     }
@@ -162,13 +149,7 @@ open class AuthenticationVM @Inject constructor(
         }
     }
 
-    suspend fun logout(){
+    suspend fun logout() {
         sessionR.deleteAllSession()
     }
-
-
-    fun getUser(id: String){
-
-    }
-
 }

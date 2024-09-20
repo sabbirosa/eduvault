@@ -37,8 +37,7 @@ import com.sabbirosa.eduvault.ui.screens.CardWithTitle
 
 @Composable
 fun ResourceDialog(
-    resource: Resource,
-    onDismiss: () -> Unit
+    resource: Resource, onDismiss: () -> Unit
 ) {
     val context = LocalContext.current
     if (resource != null) {
@@ -71,14 +70,12 @@ fun ResourceDialog(
                     val url = resource.public_url ?: "N/A"
                     if (url != "N/A") {
                         Column(
-//                            verticalAlignment = Alignment.CenterVertically,
-//                            horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 modifier = Modifier.fillMaxWidth()
-                            ){
+                            ) {
                                 Text(
                                     text = "Go to resource",
                                     color = Color.Blue,
@@ -90,9 +87,7 @@ fun ResourceDialog(
                                 IconButton(onClick = {
                                     copyToClipboard(context, url)
                                     Toast.makeText(
-                                        context,
-                                        "Copied to Clipboard",
-                                        Toast.LENGTH_SHORT
+                                        context, "Copied to Clipboard", Toast.LENGTH_SHORT
                                     ).show()
                                 }) {
                                     Icon(
@@ -109,27 +104,24 @@ fun ResourceDialog(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     TextButton(
-                        onClick = onDismiss,
-                        modifier = Modifier.align(Alignment.End)
+                        onClick = onDismiss, modifier = Modifier.align(Alignment.End)
                     ) {
                         Text(text = "Close")
                     }
                 }
             }
         }
-
-
     }
 }
+
 @Composable
-fun ResourceButton(resource: Resource){
+fun ResourceButton(resource: Resource) {
     var showResource by remember { mutableStateOf(false) }
     Button(
         onClick = {
             showResource = true
         },
-        modifier = Modifier
-            .fillMaxHeight(),
+        modifier = Modifier.fillMaxHeight(),
         shape = MaterialTheme.shapes.medium,
         colors = ButtonDefaults.buttonColors(Color.Transparent)
     ) {
@@ -141,28 +133,21 @@ fun ResourceButton(resource: Resource){
                     "${resource.title?.take(10)}..."
                 } else {
                     resource.title ?: ""
-                },
-                color = Color.Black,
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp
+                }, color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 20.sp
             )
             Text(
                 text = if ((resource.description?.length ?: 0) > 15) {
                     "${resource.description?.take(10)}..."
                 } else {
                     resource.description ?: ""
-                },
-                color = Color.Black
+                }, color = Color.Black
             )
         }
     }
-    if (showResource){
-        ResourceDialog(
-            resource = resource,
-            onDismiss = {
-                showResource = false
-            }
-        )
+    if (showResource) {
+        ResourceDialog(resource = resource, onDismiss = {
+            showResource = false
+        })
     }
 }
 
@@ -177,7 +162,8 @@ fun openUrl(context: Context, url: String) {
 }
 
 fun copyToClipboard(context: Context, text: String) {
-    val clipboard = ContextCompat.getSystemService(context, android.content.ClipboardManager::class.java)
+    val clipboard =
+        ContextCompat.getSystemService(context, android.content.ClipboardManager::class.java)
     val clip = android.content.ClipData.newPlainText("Copied URL", text)
     clipboard?.setPrimaryClip(clip)
 }

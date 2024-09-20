@@ -24,7 +24,7 @@ import com.sabbirosa.eduvault.ui.screens.Resources.SubmitResourceForm
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun Resources(userid: String){
+fun Resources(userid: String) {
 
     var selectedIndexBotNav by rememberSaveable {
         mutableIntStateOf(0)
@@ -37,31 +37,31 @@ fun Resources(userid: String){
     var scrollState = rememberScrollState()
     val context = LocalContext.current
 
-    Scaffold(
-        bottomBar = {
-            BottomNavigation(
-                items = bottomNavList,
-                selectedIndex = selectedIndexBotNav
-            ) { index ->
-                selectedIndexBotNav = index
-                navController.navigate(bottomNavList[index].title)
-
-            }
+    Scaffold(bottomBar = {
+        BottomNavigation(
+            items = bottomNavList, selectedIndex = selectedIndexBotNav
+        ) { index ->
+            selectedIndexBotNav = index
+            navController.navigate(bottomNavList[index].title)
         }
-    ) {
-        NavHost(navController = navController, startDestination = "My Vault" ){
-            composable("My Vault"){
+    }) {
+        NavHost(navController = navController, startDestination = "My Vault") {
+            composable("My Vault") {
                 MyVaultScreen(navController, userid, resourcevm)
             }
-            composable("Public Vault"){
+
+            composable("Public Vault") {
                 PublicVaultScreen(userid, resourcevm)
             }
-            composable("Saved Resources"){
+
+            composable("Saved Resources") {
                 SavedResourceScreen(userid, resourcevm)
             }
+
             composable("Submit Resource") {
                 SubmitResourceForm(userid, resourcevm, navController)
             }
+
             composable("Submit Resource/{resourceId}") { backStackEntry ->
                 // Retrieve the resourceId from the back stack entry
                 val Id = backStackEntry.arguments?.getString("resourceId")
@@ -70,9 +70,5 @@ fun Resources(userid: String){
                 SubmitResourceForm(userid, resourcevm, navController, resourceId = Id!!)
             }
         }
-
     }
-
-
-
 }

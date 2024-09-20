@@ -11,18 +11,15 @@ object Api {
 
     const val URL = "https://eduvault.sabbir.co/api/"
 
-    private val moshi = Moshi.Builder()
-        .add(KotlinJsonAdapterFactory())
-        .build()
+    private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
 
     val jsonAdapter: JsonAdapter<List<Map<String, Any>>> = moshi.adapter(
         Types.newParameterizedType(List::class.java, Map::class.java)
     )
 
-    private val retrofit = Retrofit.Builder()
-        .addConverterFactory(MoshiConverterFactory.create(moshi))
-        .baseUrl(URL)
-        .build()
+    private val retrofit =
+        Retrofit.Builder().addConverterFactory(MoshiConverterFactory.create(moshi)).baseUrl(URL)
+            .build()
 
     val retrofitService: EduVaultService by lazy {
         retrofit.create(EduVaultService::class.java)

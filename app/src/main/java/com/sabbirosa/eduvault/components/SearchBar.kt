@@ -67,16 +67,16 @@ fun SearchBar(
     paddingEnd: Dp = 8.dp,
     cornerRadius: Dp = 5.dp,
     textSize: TextUnit = 15.sp,
-    text: String ="Search Courses"
+    text: String = "Search Courses"
 ) {
     var searchQuery by remember { mutableStateOf(TextFieldValue("")) }
     action(searchQuery)
 
     val textColor = MaterialTheme.colorScheme.onSurface
-    val placeholderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f) // Slightly lighter for placeholder
+    val placeholderColor =
+        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f) // Slightly lighter for placeholder
 
-    BasicTextField(
-        value = searchQuery,
+    BasicTextField(value = searchQuery,
         onValueChange = { newValue -> searchQuery = newValue },
         modifier = Modifier
             .padding(start = paddingStart, end = paddingEnd)
@@ -89,17 +89,15 @@ fun SearchBar(
             .border(1.dp, Color.Gray, RoundedCornerShape(cornerRadius))
             .padding(start = 10.dp),
 
-
         textStyle = TextStyle(
             fontSize = textSize,
             color = textColor,
         ),
+
         decorationBox = { innerTextField ->
             if (searchQuery.text.isEmpty()) {
                 Box(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    contentAlignment = Alignment.CenterStart
+                    modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.CenterStart
                 ) {
                     Text(
                         text = text,
@@ -109,16 +107,14 @@ fun SearchBar(
                     )
                 }
             }
+
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .fillMaxHeight()
+                modifier = Modifier.fillMaxHeight()
             ) {
                 innerTextField()
-                IconButton(
-                    onClick = { searchQuery = TextFieldValue("") }
-                ) {
+                IconButton(onClick = { searchQuery = TextFieldValue("") }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.Backspace,
                         contentDescription = "Clear search",
@@ -148,7 +144,7 @@ fun DropDownCard(
     var isContextMenuVisible by rememberSaveable {
         mutableStateOf(false)
     }
-    var selectedText by remember{
+    var selectedText by remember {
         mutableStateOf(dropdownItems[0])
     }
     var pressOffset by remember {
@@ -166,15 +162,10 @@ fun DropDownCard(
         selectedText = dropdownItems[0]
     }
 
-//    println("Inside drop down $dropdownItems $selectedText ${dropdownItems[0]}")
     Card(
-//        elevation = 4.dp,
         modifier = Modifier
             .padding(
-                start = startPadding,
-                end = endPadding,
-                top = topPadding,
-                bottom = bottomPadding
+                start = startPadding, end = endPadding, top = topPadding, bottom = bottomPadding
             )
             .height(height)
             .then(
@@ -187,8 +178,7 @@ fun DropDownCard(
             }
             .border(2.dp, Color.Gray, RoundedCornerShape(5.dp)),
         shape = RoundedCornerShape(5.dp),
-        colors = CardDefaults.cardColors(bgColor)
-    ) {
+        colors = CardDefaults.cardColors(bgColor)) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -200,15 +190,14 @@ fun DropDownCard(
                             pressOffset = DpOffset(it.x.toDp(), it.y.toDp())
                         },
                     )
-                },
-            contentAlignment = Alignment.Center
+                }, contentAlignment = Alignment.Center
         ) {
             Row(
                 modifier = Modifier
                     .padding(horizontal = 10.dp)
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
-            ){
+            ) {
                 Text(
                     text = selectedText,
                     fontWeight = FontWeight.Bold,
@@ -225,6 +214,7 @@ fun DropDownCard(
 
             }
         }
+
         DropdownMenu(
             expanded = isContextMenuVisible,
             onDismissRequest = {
@@ -251,7 +241,6 @@ fun DropDownCard(
                                 .padding(end = endPadding)
                         )
                     },
-
                 )
             }
         }

@@ -21,10 +21,8 @@ import com.sabbirosa.eduvault.components.models.IconMap
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomNavigation(
-    items: List<BottomNavItem>,
-    selectedIndex: Int,
-    onItemSelcted: (Int) -> Unit
-){
+    items: List<BottomNavItem>, selectedIndex: Int, onItemSelcted: (Int) -> Unit
+) {
     var navSelect by rememberSaveable {
         mutableIntStateOf(0)
     }
@@ -33,34 +31,25 @@ fun BottomNavigation(
         modifier = Modifier.height(120.dp)
     ) {
         items.forEachIndexed { index, item ->
-            NavigationBarItem(
-                selected = selectedIndex == index,
-                onClick = {
-                    val idx = items.indexOf(item)
-                    onItemSelcted(idx)
-                    navSelect = idx
-                    println(item.selectedIcon)
-                },
-                label = {
-                    Text(text = item.title)
-                },
-                alwaysShowLabel = true,
-                icon = {
-                    BadgedBox(
-                        badge = {
+            NavigationBarItem(selected = selectedIndex == index, onClick = {
+                val idx = items.indexOf(item)
+                onItemSelcted(idx)
+                navSelect = idx
+                println(item.selectedIcon)
+            }, label = {
+                Text(text = item.title)
+            }, alwaysShowLabel = true, icon = {
+                BadgedBox(badge = {
 
-                        }
-                    ) {
-                        Icon(imageVector = if (index == navSelect) IconMap(item.selectedIcon)
-                        else IconMap(item.unselectedIcon),
-                            contentDescription = item.title )
-                    }
+                }) {
+                    Icon(
+                        imageVector = if (index == navSelect) IconMap(item.selectedIcon)
+                        else IconMap(item.unselectedIcon), contentDescription = item.title
+                    )
                 }
-            )
+            })
         }
     }
-
-
 }
 
 

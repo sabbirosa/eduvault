@@ -9,4 +9,3 @@ data class Resource(
     val public_url: String?,
     val userId: String?
 )
-

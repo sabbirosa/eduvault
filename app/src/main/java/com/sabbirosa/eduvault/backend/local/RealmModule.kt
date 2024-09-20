@@ -20,8 +20,7 @@ object RealmModule {
 
     @Provides
     @Singleton
-    fun provideRemoteApi(): EduVaultService{
+    fun provideRemoteApi(): EduVaultService {
         return Api.retrofitService
     }
-
 }

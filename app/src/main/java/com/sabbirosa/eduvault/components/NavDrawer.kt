@@ -33,7 +33,7 @@ fun NavDrawer(
     onClick: (item: NavDrawerItem) -> Unit,
     isLogin: Boolean
 
-){
+) {
     val items = NavDrawerItem.navDrawerItems
     Column(
         modifier = Modifier
@@ -43,29 +43,27 @@ fun NavDrawer(
         Text(
             text = "EduVault",
             color = Color(28, 48, 92),
-            modifier = Modifier
-                .padding(start = 16.dp, end = 20.dp, bottom = 10.dp),
+            modifier = Modifier.padding(start = 16.dp, end = 20.dp, bottom = 10.dp),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
-
 
         items.forEachIndexed { index, item ->
             when {
                 item.isDivider -> {
                     HorizontalDivider(
-                        modifier = Modifier
-                            .padding(bottom = 20.dp, top = 20.dp)
+                        modifier = Modifier.padding(bottom = 20.dp, top = 20.dp)
                     )
                 }
+
                 item.isHeader -> {
                     Text(
                         text = item.title,
                         fontWeight = FontWeight.Light,
-                        modifier = Modifier
-                            .padding(start = 20.dp, bottom = 20.dp, top = 20.dp)
+                        modifier = Modifier.padding(start = 20.dp, bottom = 20.dp, top = 20.dp)
                     )
                 }
+
                 else -> {
                     // Apply your condition to decide whether to display the item
                     val shouldShowItem = when {
@@ -76,8 +74,7 @@ fun NavDrawer(
 
                     if (shouldShowItem) {
                         println("LOGIN STATUS $isLogin")
-                        NavigationDrawerItem(
-                            label = { Text(text = item.title) },
+                        NavigationDrawerItem(label = { Text(text = item.title) },
                             selected = selectedIndex == index,
                             onClick = { onClick(item) },
                             icon = {

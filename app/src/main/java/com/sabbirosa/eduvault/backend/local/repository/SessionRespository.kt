@@ -14,9 +14,7 @@ import javax.inject.Inject
 class SessionRepository @Inject constructor(
     private val realm: Realm
 ) {
-
-
-    suspend fun createSession(data: UserData){
+    suspend fun createSession(data: UserData) {
         realm.write {
             val sessionData = Session().apply {
                 userId = data.userId
@@ -29,7 +27,7 @@ class SessionRepository @Inject constructor(
         }
     }
 
-    suspend fun deleteSession(id: ObjectId){
+    suspend fun deleteSession(id: ObjectId) {
         realm.write {
             val sessionObject = query<Session>("_id == $0", id).first().find()
             if (sessionObject != null) {
@@ -37,6 +35,7 @@ class SessionRepository @Inject constructor(
             }
         }
     }
+
     suspend fun deleteAllSession() {
         realm.write {
             // Query to find all Session objects
@@ -49,15 +48,9 @@ class SessionRepository @Inject constructor(
         }
     }
 
-
-    fun getAllSession() : Flow<List<Session>> {
-        return realm
-            .query<Session>()
-            .asFlow()
-            .map { results ->
-                results.list.toList()
-            }
+    fun getAllSession(): Flow<List<Session>> {
+        return realm.query<Session>().asFlow().map { results ->
+            results.list.toList()
+        }
     }
-
-
 }

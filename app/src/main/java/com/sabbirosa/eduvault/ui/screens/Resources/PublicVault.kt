@@ -62,23 +62,28 @@ fun PublicVaultScreen(userid: String, resourcevm: ResourceVM) {
     val scope = rememberCoroutineScope()
 
     var isLoading by remember { mutableStateOf(true) }
-    var resourceList by remember{
+
+    var resourceList by remember {
         mutableStateOf(listOf<Resource>())
     }
+
     val savedResourceList = remember { mutableStateListOf<Int>() }
+
     var trigger by remember {
         mutableStateOf(true)
     }
-    var filteredResourceList by remember{
+
+    var filteredResourceList by remember {
         mutableStateOf(resourceList)
     }
+
     var searchQuery by remember { mutableStateOf(TextFieldValue("")) }
+
     val filters = listOf(
-        "Title",
-        "Description",
-        "Course Code"
+        "Title", "Description", "Course Code"
     )
-    var currentFilter by remember{
+
+    var currentFilter by remember {
         mutableStateOf(filters[0])
     }
 
@@ -87,34 +92,31 @@ fun PublicVaultScreen(userid: String, resourcevm: ResourceVM) {
             resourcevm.getAllResources { list ->
                 resourceList = list
             }
-            resourcevm.getUserSavedResources(
-                userId = userid.toInt(),
-                setList = { list ->
-                    list.forEach { r ->
-                        savedResourceList.add(r.id!!)
-                    }
+            resourcevm.getUserSavedResources(userId = userid.toInt(), setList = { list ->
+                list.forEach { r ->
+                    savedResourceList.add(r.id!!)
                 }
-            )
+            })
 
-            when(currentFilter){
-                filters[0] ->{
+            when (currentFilter) {
+                filters[0] -> {
                     filteredResourceList = filterByTitle(
-                        resources = resourceList,
-                        title = searchQuery.text
+                        resources = resourceList, title = searchQuery.text
                     )
                 }
-                filters[1] ->{
+
+                filters[1] -> {
                     filteredResourceList = filterByDescription(
-                        resources = resourceList,
-                        description = searchQuery.text
+                        resources = resourceList, description = searchQuery.text
                     )
                 }
-                filters[2] ->{
+
+                filters[2] -> {
                     filteredResourceList = filterByCourseCode(
-                        resources = resourceList,
-                        courseCode = searchQuery.text
+                        resources = resourceList, courseCode = searchQuery.text
                     )
                 }
+
                 else -> false
             }
 
@@ -124,8 +126,7 @@ fun PublicVaultScreen(userid: String, resourcevm: ResourceVM) {
         }
     }
     Column(
-        modifier = Modifier
-            .padding(bottom = 40.dp)
+        modifier = Modifier.padding(bottom = 40.dp)
     ) {
         Text(
             text = "EduVault",
@@ -136,9 +137,8 @@ fun PublicVaultScreen(userid: String, resourcevm: ResourceVM) {
             textAlign = TextAlign.Center
         )
         Row(
-            modifier = Modifier
-                .padding(top = 20.dp)
-        ){
+            modifier = Modifier.padding(top = 20.dp)
+        ) {
             SearchBar(
                 action = { query ->
                     searchQuery = query
@@ -151,6 +151,7 @@ fun PublicVaultScreen(userid: String, resourcevm: ResourceVM) {
                 weight = 0.45f
 
             )
+
             DropDownCard(
                 dropdownItems = filters,
                 startPadding = 10.dp,
@@ -162,39 +163,32 @@ fun PublicVaultScreen(userid: String, resourcevm: ResourceVM) {
                 weight = 1f
             )
         }
-
     }
 
-    if(isLoading){
+    if (isLoading) {
         CircularLoadingBasic("Loading Resources...")
-    }
-    else{
+    } else {
         LazyColumn(
-            modifier = Modifier
-                .padding(top = 170.dp, bottom = 20.dp)
+            modifier = Modifier.padding(top = 170.dp, bottom = 20.dp)
         ) {
             items(
                 if (searchQuery.text == "") resourceList
                 else filteredResourceList
             ) { resource ->
                 PublicReSource(
-                    resource = resource,
-                    onSave = {
+                    resource = resource, onSave = {
                         scope.launch {
-                            resourcevm.saveResource(
-                                userId = userid.toInt(),
+                            resourcevm.saveResource(userId = userid.toInt(),
                                 resourceId = resource.id!!.toInt(),
                                 onSubmit = { status ->
                                     // Show the toast directly in the callback on the main thread
                                     (context as? Activity)?.runOnUiThread {
                                         Toast.makeText(context, status, Toast.LENGTH_SHORT).show()
                                     }
-                                }
-                            )
+                                })
                             trigger = !trigger
                         }
-                    },
-                    saved = savedResourceList.contains(resource.id)
+                    }, saved = savedResourceList.contains(resource.id)
                 )
             }
         }
@@ -203,16 +197,13 @@ fun PublicVaultScreen(userid: String, resourcevm: ResourceVM) {
 
 @Composable
 fun PublicReSource(
-    resource: Resource,
-    onSave: (Int) -> Unit,
-    saved: Boolean
-){
+    resource: Resource, onSave: (Int) -> Unit, saved: Boolean
+) {
     println(saved)
     val icon = if (saved) Icons.Filled.Done else Icons.Outlined.Bookmark
     Row(
-        modifier =Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ){
+        modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+    ) {
         ResourceButton(resource)
 
         IconButton(
@@ -223,9 +214,8 @@ fun PublicReSource(
             Icon(
                 imageVector = icon,
                 contentDescription = "Save",
-                tint = Color(0xFF5A5A5A) ,
+                tint = Color(0xFF5A5A5A),
             )
         }
-
     }
 }

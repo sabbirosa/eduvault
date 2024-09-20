@@ -23,24 +23,18 @@ fun Authentication(authvm: AuthenticationVM, navController: NavHostController) {
     }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
-    ){
-
-            if (login) {
-                LoginScreen(authvm, navController)
-            } else {
-                RegistrationScreen(authvm, navController)
-            }
-            TextButton(
-                onClick = {
-                    login = !login
-                }
-            ) {
-                Text(
-                    text = if (login) "Register" else "Login"
-                )
-            }
-
+    ) {
+        if (login) {
+            LoginScreen(authvm, navController)
+        } else {
+            RegistrationScreen(authvm, navController)
+        }
+        TextButton(onClick = {
+            login = !login
+        }) {
+            Text(
+                text = if (login) "Register" else "Login"
+            )
+        }
     }
-
-
 }
